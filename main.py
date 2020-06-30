@@ -30,12 +30,29 @@ def TPI(G, threshold):
             U.remove(v)
     return s
 
+def deferredDecision(G, probs):
+    graph = snap.ConvertGraph(snap.PUNGraph, G)
+    for e in graph.Edges():
+        casualNumber = np.random.uniform()
+        src = e.GetSrcNId()
+        dst = e.GetDstNId()
+        if casualNumber < probs[(src, dst)]:
+            graph.DelEdge(src, dst)
+    return graph
 
+np.random.seed(8)
 G = snap.LoadEdgeList(snap.PUNGraph, 'email-Eu-core.txt', 0, 1)
-threshold = {v.GetId(): np.random.uniform(0, 10) for v in G.Nodes()}
-s = TPI(G, threshold)
+threshold = {v.GetId(): 5 for v in G.Nodes()}
 
-active = []
-active.append({key for key, value in s.items() if value >= threshold[key]})
+probs = {(e.GetSrcNId(), e.GetDstNId()): np.random.uniform() for e in G.Edges()}
 
-print(active)
+sum = 0
+for i in range(0, 10):
+    g_copy = deferredDecision(G, probs)
+    s = TPI(g_copy, threshold)
+    active = [key for key, value in s.items() if value >= threshold[key]]
+    sum = sum + len(active)
+average = sum/10
+
+print(average)
+
