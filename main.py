@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-import numpy as np
+import math, numpy as np
 import snap
 
 from TPI import TPI
@@ -7,7 +7,7 @@ from deferred_decision import deferred_decision
 
 np.random.seed()
 
-G = snap.LoadEdgeList(snap.PUNGraph, 'email-Eu-core.txt', 0, 1)
+G = snap.LoadEdgeList(snap.PUNGraph, 'public_figure_edges.txt', 0, 1)
 
 const_x, frac_x = [], []
 
@@ -21,7 +21,7 @@ deg = [v.GetDeg() for v in G.Nodes()]
 iter = np.mean(deg)
 step = 3
 
-for i in range(1, (int)(iter), step):
+for i in range(1, (int) (iter), step):
     constant_threshold = {v.GetId(): i for v in G.Nodes()}
     fraction_threshold = {v.GetId(): v.GetDeg() * i / iter for v in G.Nodes()}
 
@@ -70,13 +70,15 @@ plt.plot(const_x, const_normal_y, marker='.', label='Normal')
 plt.title('Constant threshold')
 plt.legend(title='Probability distribution', loc='lower right', fontsize='small', fancybox=True)
 plt.savefig('constant_plot.png')
-plt.show()
 
 fig = plt.figure()
+
+
+plt.xlabel('Threshold')
+plt.ylabel('Size')
 
 plt.plot(frac_x, frac_uniform_y, marker='.', label='Uniform')
 plt.plot(frac_x, frac_normal_y, marker='.', label='Normal')
 plt.title('Degree proportional threshold')
 plt.legend(title='Probability distribution', loc='lower right', fontsize='small', fancybox=True)
 plt.savefig('degree_proportional_plot.png')
-plt.show()
