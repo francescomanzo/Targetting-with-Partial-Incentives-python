@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import math, numpy as np
 import snap
+import pandas as pd
 
 from TPI import TPI
 from deferred_decision import deferred_decision
@@ -19,7 +20,7 @@ normal_probs = {(e.GetSrcNId(), e.GetDstNId()): np.random.normal() for e in G.Ed
 
 deg = [v.GetDeg() for v in G.Nodes()]
 iter = np.mean(deg)
-step = 3
+step = 2
 
 for i in range(1, (int) (iter), step):
     constant_threshold = {v.GetId(): i for v in G.Nodes()}
